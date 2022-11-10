@@ -1,0 +1,115 @@
+create table gameinfo(
+gameid int(20) primary key comment'运动会编号',
+gamename varchar(30) not null comment'运动会名称',
+school varchar(20) comment'举办学校',
+gamedate date comment'运动会日期',
+count int(30) comment'参加人数' check(count>0),
+charge decimal(7,2) comment'预计费用');
+
+insert gameinfo
+values('101','秋季运动会','工业大学','2008-8-8','1000','12300.50');
+
+create table sporter(
+sporterid int(20) primary key comment'运动员编号',
+name varchar(10) not null comment'运动员姓名',
+sex char(2) comment'运动员性别' check(sex='男' or sex='女'),
+department varchar(15) not null comment'所属系号');
+
+insert sporter
+values('1001','李明','男','计算机系'),
+('1002','张三','男','数学系'),
+('1003','李四','男','计算机系'),
+('1004','王二','男','物理系'),
+('1005','李娜','女','心理系'),
+('1006','孙丽','女','数学系');
+
+create table item(
+itemid varchar(20) primary key comment'项目编号',
+itemname varchar(20) comment'项目名称',
+location varchar(20) comment'项目比赛地点');
+
+insert item
+values('x001','男子五千米','一操场'),
+('x002','男子标枪','一操场'),
+('x003','男子跳远','二操场'),
+('x004','女子跳高','二操场'),
+('x005','女子三千米','三操场');
+
+create table grade(
+id INT comment'运动员编号',
+itemid varchar(20) comment'项目编号',
+mark INT  comment'积分',
+FOREIGN KEY (id) REFERENCES sporter(sporterid),
+FOREIGN KEY (itemid) REFERENCES item(itemid),
+CHECK(mark=0 OR mark=2 OR mark=4 OR mark=6));
+
+insert grade
+values
+('1001','x001','6'),
+('1002','x001','4'),
+('1003','x001','2'),
+('1004','x001','0'),
+('1001','x003','4'),
+('1002','x003','6'),
+('1004','x003','2'),
+('1005','x004','6'),
+('1006','x004','4');
+
+#查询
+SELECT CONCAT(school,gamename,gamedate,count,charge)
+FROM gameinfo;
+
+#文字形式表达
+SELECT CONCAT(school,gamename,'在',gamedate,'举行，','参加人数',count,'人，','赛会预计费用',charge,'元。')
+FROM gameinfo;
+
+#更改信息表参加人数减少，费用减少
+SELECT (count*0.8)'80%人数',(charge*0.9)'90%费用'
+FROM gameinfo;
+
+#1006运动员信息更改
+UPDATE sporter
+set name='孙梦',department='外语系'
+WHERE sporterid=1006;
+select * from sporter;
+
+#参加运动会总人数
+SELECT count(*) AS '人数'
+FROM sporter;
+
+#查姓所有李运动员信息
+SELECT (NAME)姓名,(department)系别
+FROM sporter 
+WHERE NAME LIKE '李%';
+#目前积分最高的系
+SELECT mark() FROM grade  
+SELECT department  
+FROM sporter
+#在一操场的各项目和冠军名字
+#找出和张三参加过项目的同学
+#张三所有成绩改为0
+#删除女子跳高比赛项目
+DELETE FROM item WHERE  itemname='女子跳高';
+select * from item;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
